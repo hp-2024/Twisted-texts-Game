@@ -1,0 +1,89 @@
+from tkinter import *
+from random import choice
+from random import shuffle
+from english_words import english_words_lower_alpha_set
+#import playsound 
+window = Tk()
+window.title("Text Twist Game")
+
+heading_label = Label(window, text = "Welcome to Twisted Texts!", font=("Helvetica", 36), bg = "#990012", fg = "white", width = 25)
+heading_label.pack(pady=20)
+'''def correctplay():
+    playsound('correctsound.mp3')
+def incorrectplay():
+    playsound('incorrectsound.mp3')'''
+jumbled_label = Label(window, text="", font=("Helvetica", 40))
+jumbled_label.pack(pady=20)
+
+def shuffler():
+    entry_answer.delete(0, END)
+    answer_label.config(text='')
+    hint_label.config(text = '')
+    words = list(english_words_lower_alpha_set)
+    global word
+    word = choice(words)
+    letters = list(word)
+    shuffle(letters)
+    global shuffled_word
+    shuffled_word =  ''.join(letters)
+    jumbled_label.config(text=shuffled_word)
+
+
+def answer():
+    InputValue = entry_answer.get()
+    if word == InputValue:
+        answer_label.config(text="Correct!!")
+        inc()
+        correctplay()
+    else:
+        answer_label.config(text="Incorrect")
+        incorrectplay()
+
+global score
+score = 0
+def inc():
+    st = score_label['text']
+    idex = st.index(':')
+    x =  int(st[idex+1:]) + 10
+    score_label.config(text= (st[:idex+1] + str(x)))
+def dec():
+    st = score_label['text']
+    idex = st.index(':')
+    x =  int(st[idex+1:]) - 2
+    score_label.config(text= (st[:idex+1] + str(x)))
+
+def hint():
+    hintword = word[0] + ((len(word)-2)*" _ ") + word[-1]
+    dec()
+    hint_label.config(text = hintword)
+
+
+entry_answer = Entry(window, font=("Helvetica", 24))
+entry_answer.pack(pady=20)
+
+
+button_frame = Frame(window)
+button_frame.pack(pady=20)
+
+answer_button = Button(button_frame, text="Check", command=answer, font=("Helvetica", 15, "bold"), bg="#151B54",fg = "white",borderwidth = 0)
+answer_button.grid(row=0, column=0, padx=10)
+
+my_button = Button(button_frame, text="Next", command=shuffler, font=("Helvetica", 15, "bold"), bg="#E55451",fg = "white",borderwidth = 0)
+my_button.grid(row=0, column=1, padx=10)
+
+hint_button = Button(button_frame, text="Hint", command= hint, font=("Helvetica", 15, "bold"), bg="#6B8E23",fg = "white",borderwidth = 0)
+hint_button.grid(row=0, column=2, padx=10)
+
+exit_button = Button(button_frame, text="Quit", command=window.destroy, font=("Helvetica", 15, "bold"), bg="#F88017",fg = "white",borderwidth = 0, width=10)
+exit_button.grid(row=1, column=1, padx=10, pady = 50)
+score_label = Label(window, text= 'Score:0', font=("Helvetica", 18))
+score_label.pack(pady=7)
+
+answer_label = Label(window, text='', font=("Helvetica", 18))
+answer_label.pack(pady=20)
+
+hint_label = Label(window, text='', font=("Helvetica", 18))
+hint_label.pack(pady=10)
+
+shuffler()
+window.mainloop()
